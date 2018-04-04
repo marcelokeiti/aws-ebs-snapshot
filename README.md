@@ -1,5 +1,11 @@
 # aws-ebs-snapshot
-Lambda functions aimed to manage EBS snapshots
+Lambda functions aimed to manage EBS snapshots.
+
+The create-ebs-snapshot lambda function will search all EBS Volumes marked with the tag Retention. This tag specify the amount of days the snapshot need to be kept.
+
+The tag-ebs-snapshot lambda function is triggered after the creation of the snapshot volume. This function copy the tags 'Cost Tag' and 'Name' from the original EBS volume to the snapshots (you can easily edit the source code to copy other tags). The function then create a new tag 'DeleteOn', based on tag Retention, with the date in which the snapshot can be deleted.
+
+The delete-ebs-snapshot lambda function delete all snapshots based on tag DeleteOn.
 
 ## Getting Started
 
