@@ -1,0 +1,19 @@
+import boto3
+
+import time, datetime
+
+def lambda_handler(event, context):
+    ec2 = boto3.client('ec2')
+    
+    delete_on = datetime.date.today().strftime('%Y-%m-%d')
+    
+    snapshots = ec2.describe_snapshots(
+            Filters=[
+                {'Name': 'tag-key', 'Values': ['DeleteOn']},
+                {'Name': 'tag-value', 'Values': [delete_on]}
+            ]
+        ).get('Snapshots', [])
+        
+    for snap in snapshots:
+        print "Deleting snapshot %s" % snap['SnapshotId']
+        ec2.delete_snapshot(SnapshotId=snap['SnapshotId'])
